@@ -10,6 +10,7 @@ import java.util.Arrays;
 
 @Component
 public class UsernamePasswordAuthenticationTokenFactory {
+    private User user;
 
     public UsernamePasswordAuthenticationToken create(User u) {
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(u.getRole().getName());
@@ -17,4 +18,12 @@ public class UsernamePasswordAuthenticationTokenFactory {
         return authentication;
     }
 
+    public String getPassword() {
+        return this.user.getPassword();
+    }
+
+
+    public String getUsername() {
+        return this.user.getUsername();
+    }
 }

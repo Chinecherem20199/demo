@@ -1,12 +1,13 @@
 package com.example.demo.service;
 
 
+import com.example.demo.business_logic.UserLogic;
+import com.example.demo.handler.AjaxAuthenticationSuccessHandler;
 import com.example.demo.jwt.JwtService;
 import com.example.demo.model.User;
-import com.example.demo.repository.UserLogic;
 import com.example.demo.support.DateGenerator;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -22,7 +23,7 @@ public class UserService {
 
     private UserLogic userLogic;
 
-   @Autowired
+    @Autowired
     public UserService(JwtService jwtService, DateGenerator dateGenerator, UserLogic userLogic
     ) {
 
@@ -37,32 +38,37 @@ public class UserService {
         if (!StringUtils.hasText(username) || !StringUtils.hasText(pass)) {
             return null;
         }
-        List<User> userList = userLogic.getByColunmName("username", username);
+        List<User> userList = userLogic.getByColunmName("userName",username);
         if (userList == null || userList.isEmpty()) {
             return null;
         }
         User u = userList.get(0);
-        if (!u.getPassword().equals(BCrypt.hashpw(pass, u.getSalt()))) {
-            return null;
-        }
+//        if (!u.getPassword().equals(BCrypt.hashpw(pass, u.getSalt()))) {
+//            return null;
+//        }
 
         return u;
     }
+
+    private final Logger logger = Logger.getLogger(AjaxAuthenticationSuccessHandler.class);
+
 
     public User createUserToken(String username, String secret) {
 
-        String token = jwtService.createToken(username, secret, dateGenerator.getExpirationDate());
-        User u = userLogic.getByColunmName("username", username).get(0);
+        String token = jwtService.createToken(username, dateGenerator.getExpirationDate());
+        User u = userLogic.getByColunmName("userName", username).get(0);
         u.setToken(token);
-        userLogic.update(u);
+        logger.info("=================Token==========="+token);
+
+//        userLogic.update(u);
         return u;
     }
 
-    public User validateUser(String token, String secret) {
-        String username = jwtService.getUsername(token, secret);
+    public User validateUser(String token) {
+        String username = jwtService.getUsername(token);
         if (username != null) {
-            User user = userLogic.getByColunmName("username", username).get(0);
-            if (user != null && token.equals(user.getToken()) && jwtService.isValid(token, secret)) {
+            User user = userLogic.getByColunmName("userName", username).get(0);
+            if (user != null && jwtService.isValid(token)) {
                 return user;
             }
         }

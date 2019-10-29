@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
-import com.example.demo.jwt.JwtService;
+import com.example.demo.business_logic.RoleLogic;
+import com.example.demo.model.Role;
 import com.example.demo.model.User;
-import com.example.demo.repository.UserLogic;
+import com.example.demo.business_logic.UserLogic;
 import com.example.demo.service.UserService;
 import com.example.demo.support.StringSupport;
+import com.example.demo.viewmodel.UserViewModel;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
@@ -38,6 +38,12 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    private RoleLogic roleLogic;
+
+    public UserController(RoleLogic roleLogic) {
+        this.roleLogic = roleLogic;
+    }
 
     private static final String USERNAME = "username";
     private static final String AUTHORIZATIONS = "permissions";
@@ -80,28 +86,23 @@ public class UserController {
         return new ResponseEntity<>(messageResponse, headers, HttpStatus.OK);
     }
     @RequestMapping(value = "/saveuser", method = RequestMethod.POST)
-    public ResponseEntity<MessageResponse<User>> createUser( @Valid @RequestBody User user){
+    public ResponseEntity<MessageResponse<User>> createUser( @Valid @RequestBody UserViewModel user){
         MessageResponse<User> messageResponse = new MessageResponse<>();
         Gson gson=new Gson();
         logger.info(gson.toJson(user));
-        userLogic.create(user);
+        User userObj = new User();
+        userObj.setUsername(user.getUsername());
+        userObj.setPassword(user.getPassword());
+        Role  role =roleLogic.findOne(user.getRole());
+        userObj.setRole(role);
+        userLogic.create(userObj);
         messageResponse.setMessage("User created successfully");
         messageResponse.setStatus(200);
         messageResponse.setSuccessful(true);
-        messageResponse.setData(user);
+        messageResponse.setData(userObj);
         return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
 
-//    @RequestMapping(value = "/edituser", method = RequestMethod.PUT)
-//    public ResponseEntity<MessageResponse<User>> editUser(@Valid @RequestBody User user)
-//    {
-//        MessageResponse<User> messageResponse1 = new MessageResponse<>();
-//        Gson gson = new Gson();
-//        logger.info(gson.toJson(user));
-//        userLogic.update(user);
-//        messageResponse1.setMessage("Updated successfully.");
-//        messageResponse1.setStatus(200);
-//        messageResponse1.setData(user);
-//        return new ResponseEntity<>(messageResponse1,HttpStatus.OK);
-//    }
+//
+
 }

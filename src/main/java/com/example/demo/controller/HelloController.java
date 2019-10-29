@@ -8,12 +8,10 @@ public class HelloController {
 
     // TODO este controller nao tem sentido existir
 
-    @RequestMapping("/")
+    @RequestMapping("index")
     public String index() {
     	System.out.print("==========Hello world==============");
         return "It is working!";
     }
-    
-    
 
 }

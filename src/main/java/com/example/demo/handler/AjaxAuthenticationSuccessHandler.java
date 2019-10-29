@@ -2,9 +2,11 @@
 package com.example.demo.handler;
 
 
+import com.example.demo.Config.WebServiceFilterChain;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import com.google.gson.Gson;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -27,11 +29,15 @@ public class AjaxAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     @Autowired
     UserService userService;
     Gson gson = new Gson();
+    private final Logger logger = Logger.getLogger(AjaxAuthenticationSuccessHandler.class);
+
+
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         logger.debug("Authentication Successful"+"===User remote header address is equal to====="+request.getRemoteAddr());
         User u = userService.createUserToken(authentication.getName(), request.getRemoteAddr());
+        logger.info(gson.toJson(u));
         Map<Object, Object> map = new HashMap<>();
         map.put("status", HttpServletResponse.SC_OK);
         map.put("message", "logged in successfully");

@@ -7,17 +7,19 @@ import java.io.Serializable;
 @Entity
 @Table(name = "role")
 public class Role implements Serializable {
+//    @Column(name = "role_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-//    @Column
+    private Long id;
+
+//    @Column(name = "role_name")
     private String name;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

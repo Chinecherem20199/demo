@@ -49,35 +49,38 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                    .antMatchers("/api/authenticate").permitAll()
-                    .antMatchers("/api/user").permitAll()
-                    .antMatchers("/api/createuser").permitAll()
-                    .antMatchers("/api/alluser").permitAll()
-                    .antMatchers("/api/saveuser").permitAll()
-                    .antMatchers("/api/saverole").permitAll()
+                .antMatchers("/api/authenticate").permitAll()
+                .antMatchers("/api/user").permitAll()
+                .antMatchers("/api/createuser").permitAll()
+                .antMatchers("/api/alluser").permitAll()
+                .antMatchers("/api/saveuser").permitAll()
+                .antMatchers("/api/saverole").permitAll()
+                .antMatchers("/api/edituser").permitAll()
+//                .hasAnyRole("role")
 
 //                .hasAnyAuthority("USER")
-                    .antMatchers("/").permitAll()
-                    .antMatchers("/shutdown").permitAll()
-                    .antMatchers("/favicon.ico").permitAll()
-                    .anyRequest().authenticated()
-                       .and()
-                    .formLogin()
-                    .loginProcessingUrl("/api/authentication")
-                    .successHandler(ajaxAuthenticationSuccessHandler)
-                    .failureHandler(ajaxAuthenticationFailureHandler)
-                    .usernameParameter("username")
-                    .passwordParameter("password")
+                .antMatchers("/api/allposts","/api/savepost").hasAnyAuthority("ADMIN")
+                .antMatchers("/").permitAll()
+                .antMatchers("/shutdown").permitAll()
+                .antMatchers("/favicon.ico").permitAll()
+
+
                 .and()
-                    .logout()
-                    .logoutUrl("/api/logout")
-                    .logoutSuccessHandler(ajaxLogoutSuccessHandler)
-                    .invalidateHttpSession(true)
-                    .deleteCookies("JSESSIONID");
+                .formLogin()
+                .loginProcessingUrl("/api/authentication")
+                .successHandler(ajaxAuthenticationSuccessHandler)
+                .failureHandler(ajaxAuthenticationFailureHandler)
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .and()
+                .logout()
+                .logoutUrl("/api/logout")
+                .logoutSuccessHandler(ajaxLogoutSuccessHandler)
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID");
 
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.headers().cacheControl();
     }
-
 
 }

@@ -1,6 +1,7 @@
-package com.example.demo.repository;
+package com.example.demo.business_logic;
 
 import com.example.demo.model.Role;
+import com.example.demo.repository.AbstractJpaDao;
 import org.apache.log4j.Logger;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;

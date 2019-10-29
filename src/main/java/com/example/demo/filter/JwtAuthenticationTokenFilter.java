@@ -36,7 +36,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
 
     @Autowired
-    public JwtAuthenticationTokenFilter(UserService userService, SecurityAppContext securityAppContext, UsernamePasswordAuthenticationTokenFactory usernamePasswordAuthenticationTokenFactory) {
+    public JwtAuthenticationTokenFilter(UserService userService, SecurityAppContext securityAppContext,
+                                        UsernamePasswordAuthenticationTokenFactory usernamePasswordAuthenticationTokenFactory) {
         this.securityAppContext = securityAppContext;
         this.userService = userService;
         this.usernamePasswordAuthenticationTokenFactory = usernamePasswordAuthenticationTokenFactory;
@@ -51,7 +52,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 SecurityContext context = securityAppContext.getContext();
                 if (context.getAuthentication() == null) {
                     logger.info("Checking authentication for token " + authToken);
-                    User u = userService.validateUser(authToken, request.getRemoteAddr());
+                    User u = userService.validateUser(authToken);
                     if (u != null) {
                         logger.info("===========User " + u.getUsername() + " found.=========");
                         Authentication authentication = usernamePasswordAuthenticationTokenFactory.create(u);

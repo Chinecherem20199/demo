@@ -1,5 +1,6 @@
 package com.example.demo.security;
 
+import com.auth0.jwt.JWT;
 import com.example.demo.Secfactory.UsernamePasswordAuthenticationTokenFactory;
 import com.example.demo.handler.HeaderHandler;
 import com.example.demo.model.User;
@@ -13,6 +14,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
+
+import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 
 @Component
@@ -47,4 +57,5 @@ public class AuthProviderService implements AuthenticationProvider {
     public boolean supports(Class<?> aClass) {
         return aClass.equals(UsernamePasswordAuthenticationToken.class);
     }
+
 }

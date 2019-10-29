@@ -3,6 +3,7 @@ package com.example.demo.jwt;
 
 
 
+import com.example.demo.service.JwtProperties;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -18,8 +19,9 @@ import java.util.Date;
 public class JwtService {
 
     static final Logger LOGGER = LoggerFactory.getLogger(JwtService.class);
+    static final String secret ="SomeSecretForJWTGeneration";
 
-    public String createToken(String username, String secret, Date expireAt) {
+    public String createToken(String username, Date expireAt) {
        if(StringUtils.hasText(username) && StringUtils.hasText(secret) && expireAt != null && expireAt.after(new Date()) ) {
            String secret2 = new String(Base64.encodeBase64(secret.getBytes()));
            String compactJws = Jwts.builder()
@@ -32,7 +34,7 @@ public class JwtService {
        return null;
     }
 
-    public boolean isValid(String token, String secret) {
+    public boolean isValid(String token) {
         if(StringUtils.hasText(token) && StringUtils.hasText(secret)) {
             try {
                 String secret2 = new String(Base64.encodeBase64(secret.getBytes()));
@@ -45,7 +47,7 @@ public class JwtService {
         return false;
     }
 
-    public String getUsername(String token, String secret) {
+    public String getUsername(String token) {
         if(StringUtils.hasText(token) && StringUtils.hasText(secret)) {
             try {
                 String secret2 = new String(Base64.encodeBase64(secret.getBytes()));

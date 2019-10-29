@@ -13,13 +13,15 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
     //    @Column(nullable = false)
-    String username;
-    //    @Column(nullable = false)
+//    @Column(name = "userName")
+    String userName;
+
     String password;
-    //    @Column(nullable = false)
+
     String salt;
     @ManyToOne(targetEntity = Role.class)
     private Role role;
+//    @Column(name = "token")
     String token;
 
     public User() {
@@ -32,7 +34,7 @@ public class User implements Serializable {
     }
 
     public String getUsername() {
-        return username;
+        return userName;
     }
 
     public String getPassword() {
@@ -56,7 +58,7 @@ public class User implements Serializable {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.userName = username;
     }
 
     public void setPassword(String password) {
