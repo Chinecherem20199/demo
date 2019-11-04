@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/user").permitAll()
-                .antMatchers("/api/createuser").permitAll()
+                .antMatchers("/api/createuser/**").permitAll()
                 .antMatchers("/api/alluser").permitAll()
                 .antMatchers("/api/saveuser").permitAll()
                 .antMatchers("/api/saverole").permitAll()
@@ -63,6 +63,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/shutdown").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
+                .antMatchers("/api/savecomment").permitAll()
+               .antMatchers("/api/savecomment").hasAnyAuthority("ADMIN"," USER")
 
 
                 .and()

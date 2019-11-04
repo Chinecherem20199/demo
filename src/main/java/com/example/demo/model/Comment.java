@@ -11,14 +11,9 @@ public class Comment implements Serializable {
     private Integer id;
     private String text;
 
-//    @ManyToOne(targetEntity = Admin.class)
-
-
-//    @ManyToOne(targetEntity = Post.class)
+    @ManyToOne(targetEntity = Post.class)
     private Post post;
 
-//    @OneToMany
-//    @JoinColumn
     private User role;
 
     public Comment() {

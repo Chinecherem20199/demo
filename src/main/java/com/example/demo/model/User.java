@@ -12,8 +12,7 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    //    @Column(nullable = false)
-//    @Column(name = "userName")
+
     String userName;
 
     String password;
@@ -21,7 +20,10 @@ public class User implements Serializable {
     String salt;
     @ManyToOne(targetEntity = Role.class)
     private Role role;
-//    @Column(name = "token")
+
+    @ManyToOne(targetEntity = Person.class)
+    private Person person;
+
     String token;
 
     public User() {
@@ -75,5 +77,13 @@ public class User implements Serializable {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }

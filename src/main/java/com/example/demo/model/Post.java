@@ -3,6 +3,7 @@ package com.example.demo.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="posts")
@@ -14,8 +15,9 @@ public class Post implements Serializable {
     private String title;
     private String body;
     private Date date;
-//    @JoinColumn
-//    @ManyToOne(targetEntity = Admin.class)
+
+//    @OneToMany
+//    private List<Comment> comments;
 
     public Post() {
     }
@@ -58,5 +60,11 @@ public class Post implements Serializable {
         this.date = date;
     }
 
-
+//    public List<Comment> getComments() {
+//        return comments;
+//    }
+//
+//    public void setComments(List<Comment> comments) {
+//        this.comments = comments;
+//    }
 }

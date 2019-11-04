@@ -33,7 +33,7 @@ public class AbstractJpaDao<T extends Serializable> implements IGenericDao<T> {
     }
 
 
-    public T findOne(long id) {
+    public T findOne(Object id) {
         return entityManager.find(clazz, id);
     }
 
@@ -57,6 +57,11 @@ public class AbstractJpaDao<T extends Serializable> implements IGenericDao<T> {
         entityManager.merge(entity);
         return entity;
     }
+
+//    public T updateById(long entityId){
+//        T entityUpdate = findOne(entityId);
+//       return update(entityUpdate);
+//    }
 
     public void delete(T entity) {
         entityManager.remove(entity);

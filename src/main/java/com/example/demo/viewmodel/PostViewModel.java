@@ -13,6 +13,7 @@ public class PostViewModel {
 
     private Integer user;
 
+    private  Integer comment;
     Date date;
 
     public String getTitle() {
@@ -45,5 +46,13 @@ public class PostViewModel {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Integer getComment() {
+        return comment;
+    }
+
+    public void setComment(Integer comment) {
+        this.comment = comment;
     }
 }
