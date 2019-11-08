@@ -10,12 +10,17 @@ import java.util.List;
 public class Post implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String title;
     private String body;
     private Date date;
 
+    String status;
+
+
+    @ManyToOne(targetEntity = User.class)
+    private User user;
 //    @OneToMany
 //    private List<Comment> comments;
 
@@ -28,11 +33,11 @@ public class Post implements Serializable {
         this.date = date;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -60,7 +65,23 @@ public class Post implements Serializable {
         this.date = date;
     }
 
-//    public List<Comment> getComments() {
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    //    public List<Comment> getComments() {
 //        return comments;
 //    }
 //

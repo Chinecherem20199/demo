@@ -33,20 +33,20 @@ public class UserService {
 
     }
 
+    private static String DEACTIVATED = "DEACTIVATED";
 
     public User isLoginValid(String username, String pass) {
         if (!StringUtils.hasText(username) || !StringUtils.hasText(pass)) {
             return null;
         }
-        List<User> userList = userLogic.getByColunmName("userName",username);
+        List<User> userList = userLogic.getByColunmName("userName", username);
         if (userList == null || userList.isEmpty()) {
             return null;
         }
+        if (userList.get(0).getStatus().equals(DEACTIVATED)) {
+            return null;
+        }
         User u = userList.get(0);
-//        if (!u.getPassword().equals(BCrypt.hashpw(pass, u.getSalt()))) {
-//            return null;
-//        }
-
         return u;
     }
 
@@ -58,7 +58,7 @@ public class UserService {
         String token = jwtService.createToken(username, dateGenerator.getExpirationDate());
         User u = userLogic.getByColunmName("userName", username).get(0);
         u.setToken(token);
-        logger.info("=================Token==========="+token);
+        logger.info("=================Token===========" + token);
 
 //        userLogic.update(u);
         return u;

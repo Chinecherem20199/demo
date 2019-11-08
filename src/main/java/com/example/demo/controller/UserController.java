@@ -19,10 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.validation.Valid;
@@ -80,7 +77,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/alluser", method = RequestMethod.GET)
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
     public ResponseEntity<MessageResponse<List<User>>> getAllUsers(
     ) {
         MessageResponse<List<User>> messageResponse = new MessageResponse<>();
@@ -95,7 +92,7 @@ public class UserController {
         return new ResponseEntity<>(messageResponse, headers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/saveuser", method = RequestMethod.POST)
+    @RequestMapping(value = "/user", method = RequestMethod.POST)
     public ResponseEntity<MessageResponse<User>> createUser(@Valid @RequestBody UserViewModel user) {
         MessageResponse<User> messageResponse = new MessageResponse<>();
         Gson gson = new Gson();
@@ -107,8 +104,9 @@ public class UserController {
         person.setAddress(user.getAddress());
         personLogic.create(person);
         User userObj = new User();
-        userObj.setUsername(user.getUsername());
-        userObj.setPassword(user.getPassword());
+        userObj.setUsername(user.getUsername().trim());
+        userObj.setPassword(user.getPassword().trim());
+        userObj.setStatus("ACTIVATED");
         Role role = roleLogic.findOne(user.getRole());
         userObj.setRole(role);
         userObj.setPerson(person);
@@ -121,25 +119,35 @@ public class UserController {
         return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
 
-//    @RequestMapping(value = "/updateuser/{id}", method = RequestMethod.PUT)
-//    public ResponseEntity<MessageResponse<User>> updateUser(@PathVariable  Integer id,  @Valid UserViewModel user){
-//        MessageResponse<User> messageResponse = new MessageResponse<>();
-//        Gson gson = new Gson();
-//        logger.info(gson.toJson(user));
-//        User updateUser = userLogic.findOne(id);
-//        updateUser.setUsername(user.getUsername());
-//       userLogic.update(updateUser);
-////        userLogic.updateById(id);
-//        messageResponse.setMessage("User was updated successfully.");
-//        messageResponse.setStatus(200);
-//        messageResponse.setSuccessful(true);
-//        messageResponse.setData(updateUser);
-//
-//        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<MessageResponse<Person>> updateUser(@PathVariable Integer id, @Valid @RequestBody UserViewModel user) {
+        MessageResponse<Person> messageResponse = new MessageResponse<>();
+        Gson gson = new Gson();
+        logger.info(gson.toJson(user));
+        User user1 = userLogic.findOne(id);
+        Person updatePerson = user1.getPerson();
+        updatePerson.setAddress(user.getAddress());
+        updatePerson.setFullName(user.getFullName());
+        updatePerson.setEmail(user.getEmail());
+        updatePerson.setPhoneNumber(user.getPhoneNumber());
+//        updatePerson.setUsername(user.getUsername());
+        personLogic.update(updatePerson);
+//        userLogic.updateById(id);
+        messageResponse.setMessage("User was updated successfully.");
+        messageResponse.setStatus(200);
+        messageResponse.setSuccessful(true);
+        messageResponse.setData(updatePerson);
+
+        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
 
 
-//    }
+    }
 
-//
+    @RequestMapping(value = "deactivate/{id}", method = RequestMethod.DELETE)
+    public void deleteUser(@PathVariable Integer id) {
+        User user = userLogic.findOne(id);
+        user.setStatus("DEACTIVATED");
+        userLogic.update(user);
+    }
 
 }

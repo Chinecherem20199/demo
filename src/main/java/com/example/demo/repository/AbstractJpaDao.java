@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.User;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,27 +47,19 @@ public class AbstractJpaDao<T extends Serializable> implements IGenericDao<T> {
         entityManager.persist(entity);
     }
 
-//    public User create(T entity) {
-//        entityManager.persist(entity);
-//        return(User) entity;
-//    }
 
     public T update(T entity) {
         entityManager.merge(entity);
         return entity;
     }
 
-//    public T updateById(long entityId){
-//        T entityUpdate = findOne(entityId);
-//       return update(entityUpdate);
-//    }
 
     public void delete(T entity) {
         entityManager.remove(entity);
     }
 
 
-    public void deleteById(long entityId) {
+    public void deleteById(Object entityId) {
         T entity = findOne(entityId);
         delete(entity);
     }

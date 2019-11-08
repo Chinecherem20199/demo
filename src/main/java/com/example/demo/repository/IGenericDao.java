@@ -18,6 +18,6 @@ public interface IGenericDao <T extends Serializable> {
 
     void delete(final T entity);
 
-    void deleteById(final long entityId);
+    void deleteById(final Object entityId);
 
 }

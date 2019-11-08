@@ -6,10 +6,10 @@ import javax.validation.constraints.NotNull;
 public class UserViewModel {
 
 
-    @NotNull
+
     String username;
 
-    @NotNull
+
     String password;
 
     String fullName;

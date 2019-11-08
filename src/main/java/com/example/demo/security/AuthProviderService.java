@@ -49,7 +49,7 @@ public class AuthProviderService implements AuthenticationProvider {
                 LOGGER.info("Login successful. User: " + login);
                 return usernamePasswordAuthenticationTokenFactory.create(u);
             }
-        //  LOGGER.info("User does not exist" + login);
+        LOGGER.info("User does not exist" + login);
             throw new UsernameNotFoundException("Not valid login/password");
     }
 

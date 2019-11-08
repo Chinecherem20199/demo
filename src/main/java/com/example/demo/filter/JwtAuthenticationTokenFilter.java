@@ -2,6 +2,7 @@ package com.example.demo.filter;
 
 
 import com.example.demo.Secfactory.UsernamePasswordAuthenticationTokenFactory;
+import com.example.demo.business_logic.UserLogic;
 import com.example.demo.model.User;
 import com.example.demo.security.SecurityAppContext;
 import com.example.demo.service.UserService;
@@ -28,6 +29,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private final Logger logger = Logger.getLogger(this.getClass());
 
 
+    private UserLogic userLogic;
     private UserService userService;
 
     private UsernamePasswordAuthenticationTokenFactory usernamePasswordAuthenticationTokenFactory;
@@ -36,11 +38,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
 
     @Autowired
-    public JwtAuthenticationTokenFilter(UserService userService, SecurityAppContext securityAppContext,
-                                        UsernamePasswordAuthenticationTokenFactory usernamePasswordAuthenticationTokenFactory) {
+    public JwtAuthenticationTokenFilter(UserService userService, SecurityAppContext securityAppContext,UsernamePasswordAuthenticationTokenFactory
+            usernamePasswordAuthenticationTokenFactory, UserLogic userLogic)
+    {
         this.securityAppContext = securityAppContext;
         this.userService = userService;
         this.usernamePasswordAuthenticationTokenFactory = usernamePasswordAuthenticationTokenFactory;
+        this.userLogic = userLogic;
     }
 
     @Override
@@ -53,11 +57,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 if (context.getAuthentication() == null) {
                     logger.info("Checking authentication for token " + authToken);
                     User u = userService.validateUser(authToken);
+
                     if (u != null) {
                         logger.info("===========User " + u.getUsername() + " found.=========");
                         Authentication authentication = usernamePasswordAuthenticationTokenFactory.create(u);
                         context.setAuthentication(authentication);
                     }
+
                 }
             } catch (StringIndexOutOfBoundsException e) {
                 logger.error(e.getMessage());

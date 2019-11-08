@@ -6,10 +6,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +32,5 @@ public class UserLogic extends AbstractJpaDao<User> {
         }
         return userList;
     }
-
 
 }

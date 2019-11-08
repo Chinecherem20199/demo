@@ -16,6 +16,8 @@ public class User implements Serializable {
     String userName;
 
     String password;
+    String status;
+
 
     String salt;
     @ManyToOne(targetEntity = Role.class)
@@ -85,5 +87,13 @@ public class User implements Serializable {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
