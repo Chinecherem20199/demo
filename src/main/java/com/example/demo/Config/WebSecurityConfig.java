@@ -54,18 +54,40 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers().permitAll()
 //                .antMatchers("/api/alluser").permitAll()
 //                .antMatchers("/api/saveuser").permitAll()
-                .antMatchers("/api/saverole").permitAll()
-                .antMatchers("/api/edituser").permitAll()
+//                .antMatchers("/api/saverole", "/api/user").permitAll()
+//                .antMatchers("/api/edituser").permitAll()
 //                .hasAnyRole("role")
 
 //                .hasAnyAuthority("USER")
-                .antMatchers("/api/posts","/api/post","/api/posts/**","/api/deactivatedposts", "/api/deactivatepost/**", "/api/deactivateuser/**",  "/api/users").hasAnyAuthority("ADMIN")
                 .antMatchers("/").permitAll()
                 .antMatchers("/shutdown").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
-//                .antMatchers("/api/savecomment").permitAll()
-               .antMatchers("/api/savecomment", "/api/activatedposts","/api/user").hasAnyAuthority("ADMIN","USER")
 
+                /**
+                 * Only admin can view the endpoint
+                 */
+
+                .antMatchers("/api/users", "/api/deactivate/**", "/api/role").hasAnyAuthority("ADMIN")
+
+                /**
+                 * Both the user and admin can view the end points
+                 */
+
+                .antMatchers("/api/activatedposts", "/api/user","/api/user/**").hasAnyAuthority("ADMIN","USER")
+
+//                .antMatchers("/api/savecomment").permitAll()
+
+                /**Only admin can post and view all posts, all deactivated post,
+                 *  all activated post, all deactivated user, can deactivate post etc**/
+
+                .antMatchers("/api/post", "/api/posts", "/api/post/**","/api/deactivatepost/**", "/api/deactivatedposts").hasAnyAuthority("ADMIN")
+
+                /**All the comment
+                 * Authentication is here**/
+
+
+                .antMatchers("/api/comment","/api/comments","/api/deactivatecomment/**","/api/commentsbypost","/api/deactivatedcomments",
+                        "/api/activatedcomments").hasAnyAuthority("ADMIN","USER")
 
                 .and()
                 .formLogin()

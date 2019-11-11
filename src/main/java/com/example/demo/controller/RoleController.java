@@ -31,7 +31,7 @@ public class RoleController {
     private Gson gson = new Gson();
     private Logger logger = Logger.getLogger(RoleController.class);
 
-    @RequestMapping(value = "/saverole", method = RequestMethod.POST)
+    @RequestMapping(value = "/role", method = RequestMethod.POST)
     public ResponseEntity<MessageResponse<Role>> createRole(@Valid @RequestBody RoleViewModel role){
         MessageResponse<Role> messageResponse = new MessageResponse<>();
         Gson gson=new Gson();
@@ -46,10 +46,4 @@ public class RoleController {
         messageResponse.setData(roleobj);
         return new ResponseEntity<>(messageResponse,HttpStatus.OK);
     }
-//    @RequestMapping(value = "/login", method = RequestMethod.POST)
-//    public ResponseEntity<MessageResponse<User>> loginUser(@Valid  UserViewModel userLogin){
-//        MessageResponse<User> messageResponse = new MessageResponse<>();
-//        Gson gson = new Gson();
-//        logger.info(gson.toJson(userLogin));
-//    }
 }

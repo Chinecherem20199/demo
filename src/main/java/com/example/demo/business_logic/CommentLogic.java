@@ -20,7 +20,7 @@ public class CommentLogic extends AbstractJpaDao<Comment> {
 
 
 
-    public List<Comment> getByColunmName(String columName, String value) {
+    public List<Comment> getByColunmName(String columName, Object value) {
         List<Comment> commentList = new ArrayList<>();
         try {
             CriteriaBuilder cb = getCurrentSession().getCriteriaBuilder();

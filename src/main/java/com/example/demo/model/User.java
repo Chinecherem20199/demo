@@ -2,10 +2,13 @@ package com.example.demo.model;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 
 @Entity
+//@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"userName"})})
+
 @Table(name = "users")
 public class User implements Serializable {
 
@@ -13,8 +16,10 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
+    @NotNull
     String userName;
 
+    @NotNull
     String password;
     String status;
 

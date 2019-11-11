@@ -81,7 +81,7 @@ public class Post implements Serializable {
         this.status = status;
     }
 
-    //    public List<Comment> getComments() {
+//        public List<Comment> getComments() {
 //        return comments;
 //    }
 //

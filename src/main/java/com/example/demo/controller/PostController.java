@@ -1,20 +1,28 @@
 package com.example.demo.controller;
 
+import com.example.demo.business_logic.CommentLogic;
 import com.example.demo.business_logic.PostLogic;
 import com.example.demo.business_logic.UserLogic;
+import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import com.example.demo.model.User;
 import com.example.demo.viewmodel.PostViewModel;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -28,10 +36,12 @@ public class PostController {
     private static String DEACTIVATED = "DEACTIVATED";
     private static String ACTIVATED = "ACTIVATED";
 
+    CommentLogic commentLogic;
 
 
-    public PostController(UserLogic userLogic) {
+    public PostController(UserLogic userLogic, CommentLogic commentLogic) {
         this.userLogic = userLogic;
+        this.commentLogic = commentLogic;
     }
 
     UserLogic userLogic;
@@ -70,6 +80,22 @@ public class PostController {
             logger.info("<<<<<<<<<<<<<<<<Posts Accessed Successfully>>>>>>>>>>>>>>>");
             return new ResponseEntity<>(messageResponse, headers, HttpStatus.OK);
         }
+
+    @RequestMapping(value = "post/{id}", method = RequestMethod.GET)
+    public ResponseEntity<MessageResponse<Post>> GetPostsById(@RequestParam Integer id) {
+        MessageResponse<Post> messageResponse = new MessageResponse<>();
+        Gson gson = new Gson();
+        logger.info(gson.toJson(messageResponse));
+        Post post = postLogic.findOne(id);
+        messageResponse.setMessage("isSuccessful");
+        messageResponse.setData(post);
+        messageResponse.setSuccessful(true);
+        messageResponse.setStatus(HttpStatus.OK.value());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        logger.info("Posts accessed successfully.");
+        return new ResponseEntity<>(messageResponse, httpHeaders, HttpStatus.OK);
+    }
+
 
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.PUT)
     public ResponseEntity<MessageResponse<Post>> UpdatePosts(@PathVariable Integer id, @Valid @RequestBody PostViewModel post) {

@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -11,12 +12,16 @@ public class Person implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer personId;
 
+    @NotNull
     String fullName;
 
+    @NotNull
     String email;
 
+    @NotNull
     String address;
 
+    @NotNull
     int phoneNumber;
 
 //    @ManyToOne(targetEntity = User.class)

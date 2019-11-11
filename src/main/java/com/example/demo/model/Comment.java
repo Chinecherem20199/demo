@@ -13,7 +13,7 @@ public class Comment implements Serializable {
 
     @ManyToOne(targetEntity = Post.class)
     private Post post;
-
+   String status;
     private User role;
 
     public Comment() {
@@ -57,5 +57,13 @@ public class Comment implements Serializable {
 
     public void setRole(User role) {
         this.role = role;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
