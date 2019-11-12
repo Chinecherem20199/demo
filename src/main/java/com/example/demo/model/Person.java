@@ -22,7 +22,7 @@ public class Person implements Serializable {
     String address;
 
     @NotNull
-    int phoneNumber;
+    String phoneNumber;
 
 //    @ManyToOne(targetEntity = User.class)
 //   private User user;
@@ -59,11 +59,11 @@ public class Person implements Serializable {
         this.address = address;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

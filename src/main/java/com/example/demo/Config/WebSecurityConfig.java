@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -50,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/api/authenticate").permitAll()
-//                .antMatchers("/api/user").permitAll()
+               .antMatchers("/api/user").permitAll()
 //                .antMatchers().permitAll()
 //                .antMatchers("/api/alluser").permitAll()
 //                .antMatchers("/api/saveuser").permitAll()
@@ -67,13 +69,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                  * Only admin can view the endpoint
                  */
 
-                .antMatchers("/api/users", "/api/deactivate/**", "/api/role").hasAnyAuthority("ADMIN")
+//                .antMatchers("/api/users", "/api/deactivate/**", "/api/role").hasAnyAuthority("ADMIN")
 
                 /**
                  * Both the user and admin can view the end points
                  */
 
-                .antMatchers("/api/activatedposts", "/api/user","/api/user/**").hasAnyAuthority("ADMIN","USER")
+               // .antMatchers("/api/user/add").permitAll()
+                .antMatchers("/api/activatedposts","/api/user/**").hasAnyAuthority("ADMIN","USER")
 
 //                .antMatchers("/api/savecomment").permitAll()
 
@@ -84,9 +87,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 /**All the comment
                  * Authentication is here**/
+//                .antMatchers("/api/role").permitAll()
 
 
-                .antMatchers("/api/comment","/api/comments","/api/deactivatecomment/**","/api/commentsbypost","/api/deactivatedcomments",
+                .antMatchers("/api/comment","/api/comment/**","/api/comments","/api/deactivatecomment/**","/api/commentsbypost","/api/deactivatedcomments",
                         "/api/activatedcomments").hasAnyAuthority("ADMIN","USER")
 
                 .and()

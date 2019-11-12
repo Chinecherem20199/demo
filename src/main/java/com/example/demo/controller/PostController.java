@@ -59,6 +59,7 @@ public class PostController {
         postobj.setBody(post.getBody());
         User user = userLogic.findOne(post.getUser());
         postobj.setUser(user);
+        postobj.setStatus("ACTIVATED");
         postLogic.create(postobj);
 //        Check if it will work
         messageResponse.setStatus(HttpStatus.OK.value());

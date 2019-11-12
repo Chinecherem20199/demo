@@ -16,6 +16,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -58,6 +59,8 @@ public class UserController {
     private Logger logger = Logger.getLogger(UserController.class);
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+
     public HttpEntity<Map> user() {
 
         Map<String, Object> result = new HashMap<String, Object>();
@@ -78,6 +81,7 @@ public class UserController {
 
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<MessageResponse<List<User>>> getAllUsers(
     ) {
         MessageResponse<List<User>> messageResponse = new MessageResponse<>();
@@ -93,19 +97,20 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
+
     public ResponseEntity<MessageResponse<User>> createUser(@Valid @RequestBody UserViewModel user) {
         MessageResponse<User> messageResponse = new MessageResponse<>();
         Gson gson = new Gson();
         logger.info(gson.toJson(user));
-        Person person = new Person();
-        person.setPhoneNumber(user.getPhoneNumber());
-        person.setEmail(user.getEmail());
-        person.setFullName(user.getFullName());
-        person.setAddress(user.getAddress());
-        personLogic.create(person);
         User userObj = new User();
         userObj.setUsername(user.getUsername().trim());
         userObj.setPassword(user.getPassword().trim());
+        Person person = new Person();
+        person.setPhoneNumber(user.getPhoneNumber());
+        person.setEmail(user.getEmail());
+        person.setFullName(user.getFullName().trim());
+        person.setAddress(user.getAddress().trim());
+        personLogic.create(person);
         userObj.setStatus("ACTIVATED");
         Role role = roleLogic.findOne(user.getRole());
         userObj.setRole(role);
@@ -144,6 +149,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "deactivate/{id}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public void deleteUser(@PathVariable Integer id) {
         User user = userLogic.findOne(id);
         user.setStatus("DEACTIVATED");
