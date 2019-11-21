@@ -25,7 +25,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION = "Authorization";
     private static final String UTF_8 = "UTF-8";
     //Begin index for bear. bc index of bearer is 7
-    private static final int BEGIN_INDEX = 7;
+   // private static final int BEGIN_INDEX = 7;
     private final Logger logger = Logger.getLogger(this.getClass());
 
 
@@ -52,7 +52,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String authToken = request.getHeader(AUTHORIZATION);
         if (authToken != null) {
             try {
-                authToken = new String(authToken.substring(BEGIN_INDEX).getBytes(), UTF_8);
+//                authToken = new String(authToken.substring(BEGIN_INDEX).getBytes(), UTF_8);
+
+                //Updated bearer in the spring security
+                authToken = new String(authToken.getBytes());
                 SecurityContext context = securityAppContext.getContext();
                 if (context.getAuthentication() == null) {
                     logger.info("Checking authentication for token " + authToken);

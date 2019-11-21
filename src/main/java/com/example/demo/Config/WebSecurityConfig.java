@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -38,9 +39,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
+//    private BCryptPasswordEncoder bCryptPasswordEncoder;
+//
+//    public WebSecurityConfig( BCryptPasswordEncoder bCryptPasswordEncoder){
+//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+//    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProvider);
+//        passwordEncoder(bCryptPasswordEncoder)
+
     }
 
     @Override
@@ -53,46 +62,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/authenticate").permitAll()
                .antMatchers("/api/user").permitAll()
-//                .antMatchers().permitAll()
-//                .antMatchers("/api/alluser").permitAll()
-//                .antMatchers("/api/saveuser").permitAll()
-//                .antMatchers("/api/saverole", "/api/user").permitAll()
-//                .antMatchers("/api/edituser").permitAll()
-//                .hasAnyRole("role")
-
-//                .hasAnyAuthority("USER")
                 .antMatchers("/").permitAll()
                 .antMatchers("/shutdown").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
-
-                /**
-                 * Only admin can view the endpoint
-                 */
-
-//                .antMatchers("/api/users", "/api/deactivate/**", "/api/role").hasAnyAuthority("ADMIN")
-
-                /**
-                 * Both the user and admin can view the end points
-                 */
 
                // .antMatchers("/api/user/add").permitAll()
                 .antMatchers("/api/activatedposts","/api/user/**").hasAnyAuthority("ADMIN","USER")
 
 //                .antMatchers("/api/savecomment").permitAll()
 
-                /**Only admin can post and view all posts, all deactivated post,
-                 *  all activated post, all deactivated user, can deactivate post etc**/
-
                 .antMatchers("/api/post", "/api/posts", "/api/post/**","/api/deactivatepost/**", "/api/deactivatedposts").hasAnyAuthority("ADMIN")
-
-                /**All the comment
-                 * Authentication is here**/
-//                .antMatchers("/api/role").permitAll()
-
-
                 .antMatchers("/api/comment","/api/comment/**","/api/comments","/api/deactivatecomment/**","/api/commentsbypost","/api/deactivatedcomments",
                         "/api/activatedcomments").hasAnyAuthority("ADMIN","USER")
-
                 .and()
                 .formLogin()
                 .loginProcessingUrl("/api/authentication")

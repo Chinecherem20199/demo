@@ -20,6 +20,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
@@ -36,6 +38,9 @@ public class UserController {
     @Autowired
     UserLogic userLogic;
 
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
     StringSupport stringSupport;
     @Autowired
@@ -47,9 +52,10 @@ public class UserController {
     private RoleLogic roleLogic;
     private PersonLogic personLogic;
 
-    public UserController(RoleLogic roleLogic, PersonLogic personLogic) {
+    public UserController(RoleLogic roleLogic, PersonLogic personLogic, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.roleLogic = roleLogic;
         this.personLogic = personLogic;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
 
@@ -97,19 +103,29 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
-
+    @Transactional(rollbackFor =Exception.class)
     public ResponseEntity<MessageResponse<User>> createUser(@Valid @RequestBody UserViewModel user) {
         MessageResponse<User> messageResponse = new MessageResponse<>();
+
         Gson gson = new Gson();
         logger.info(gson.toJson(user));
         User userObj = new User();
         userObj.setUsername(user.getUsername().trim());
-        userObj.setPassword(user.getPassword().trim());
+        userObj.setPassword(bCryptPasswordEncoder.encode(user.getPassword().trim()));
         Person person = new Person();
         person.setPhoneNumber(user.getPhoneNumber());
         person.setEmail(user.getEmail());
         person.setFullName(user.getFullName().trim());
         person.setAddress(user.getAddress().trim());
+
+       List<User> userList = userLogic.getByUsernameAndEmail(user.getUsername(),user.getEmail());
+
+       if(!userList.isEmpty()){
+           messageResponse.setMessage("User already exist");
+           messageResponse.setStatus(403);
+           messageResponse.setSuccessful(false);
+           return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+       }
         personLogic.create(person);
         userObj.setStatus("ACTIVATED");
         Role role = roleLogic.findOne(user.getRole());

@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +13,10 @@ public class Post implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotEmpty
     private String title;
+
+    @NotEmpty
     private String body;
     private Date date;
 
@@ -21,9 +25,6 @@ public class Post implements Serializable {
 
     @ManyToOne(targetEntity = User.class)
     private User user;
-//    @OneToMany
-//    private List<Comment> comments;
-
     public Post() {
     }
 
@@ -80,12 +81,4 @@ public class Post implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
-
-//        public List<Comment> getComments() {
-//        return comments;
-//    }
-//
-//    public void setComments(List<Comment> comments) {
-//        this.comments = comments;
-//    }
 }

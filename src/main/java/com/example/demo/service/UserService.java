@@ -8,6 +8,7 @@ import com.example.demo.model.User;
 import com.example.demo.support.DateGenerator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -22,21 +23,22 @@ public class UserService {
     private DateGenerator dateGenerator;
 
     private UserLogic userLogic;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserService(JwtService jwtService, DateGenerator dateGenerator, UserLogic userLogic
-    ) {
+    public UserService(JwtService jwtService, DateGenerator dateGenerator, UserLogic userLogic, BCryptPasswordEncoder bCryptPasswordEncoder) {
 
         this.jwtService = jwtService;
         this.dateGenerator = dateGenerator;
         this.userLogic = userLogic;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 
     }
 
     private static String DEACTIVATED = "DEACTIVATED";
 
     public User isLoginValid(String username, String pass) {
-        if (!StringUtils.hasText(username) || !StringUtils.hasText(pass)) {
+        if (!StringUtils.hasText(username) || !StringUtils.hasText(bCryptPasswordEncoder.encode(pass))) {
             return null;
         }
         List<User> userList = userLogic.getByColunmName("userName", username);

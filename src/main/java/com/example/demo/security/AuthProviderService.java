@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
@@ -43,6 +44,7 @@ public class AuthProviderService implements AuthenticationProvider {
             String login = authentication.getName();
             String password = authentication.getCredentials().toString();
             LOGGER.info("Doing login username" + login);
+
             LOGGER.info("Doing login password " + password);
             User u = userService.isLoginValid(login, password);
             if(u != null) {

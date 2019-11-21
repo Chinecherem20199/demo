@@ -1,8 +1,6 @@
 package com.example.demo.viewmodel;
 
 
-import javax.validation.constraints.NotNull;
-
 public class UserViewModel {
 
 

@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -16,10 +17,10 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @NotNull
+    @NotEmpty
     String userName;
 
-    @NotNull
+    @NotEmpty
     String password;
     String status;
 
@@ -28,7 +29,9 @@ public class User implements Serializable {
     @ManyToOne(targetEntity = Role.class)
     private Role role;
 
+
     @ManyToOne(targetEntity = Person.class)
+//    @JoinColumn(name = "email")
     private Person person;
 
     String token;

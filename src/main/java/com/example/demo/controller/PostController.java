@@ -3,26 +3,19 @@ package com.example.demo.controller;
 import com.example.demo.business_logic.CommentLogic;
 import com.example.demo.business_logic.PostLogic;
 import com.example.demo.business_logic.UserLogic;
-import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import com.example.demo.model.User;
 import com.example.demo.viewmodel.PostViewModel;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
@@ -49,8 +42,12 @@ public class PostController {
     private Gson gson = new Gson();
     private Logger logger = Logger.getLogger(RoleController.class);
 
+//    private static final String TOKEN = "tokengen";
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public ResponseEntity<MessageResponse<Post>> createPost(@Valid @RequestBody PostViewModel post){
+
+//        String fish = jwt.parse(post.token);
+
         MessageResponse<Post> messageResponse = new MessageResponse<>();
         Gson gson=new Gson();
         logger.info(gson.toJson(post));

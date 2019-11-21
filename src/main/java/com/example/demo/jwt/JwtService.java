@@ -1,9 +1,7 @@
 package com.example.demo.jwt;
 
 
-
-
-import com.example.demo.service.JwtProperties;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,12 +18,14 @@ public class JwtService {
 
     static final Logger LOGGER = LoggerFactory.getLogger(JwtService.class);
     static final String secret ="SomeSecretForJWTGeneration";
+    public static final long EXPIRATION_TIME = 5 * 60 * 60;
 
     public String createToken(String username, Date expireAt) {
        if(StringUtils.hasText(username) && StringUtils.hasText(secret) && expireAt != null && expireAt.after(new Date()) ) {
            String secret2 = new String(Base64.encodeBase64(secret.getBytes()));
            String compactJws = Jwts.builder()
                     .setSubject(username)
+                   .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                     .signWith(SignatureAlgorithm.HS512, secret2)
                     .setExpiration(expireAt)
                     .compact();
@@ -58,6 +58,12 @@ public class JwtService {
         }
         return null;
     }
+    //for retrieveing any information from token we will need the secret key
 
+    private Claims getAllClaimsFromToken(String token) {
+
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+
+    }
 
 }
