@@ -98,8 +98,8 @@ public class CommentController {
         commentLogic.update(comment);
     }
 
-    @RequestMapping(value = "/commentsbypost", method = RequestMethod.GET)
-    public ResponseEntity<MessageResponse<List<Comment>>> getAllCommentByPost(@RequestParam Integer id) {
+    @RequestMapping(value = "/commentsbypost/{id}", method = RequestMethod.GET)
+    public ResponseEntity<MessageResponse<List<Comment>>> getAllCommentByPost(@PathVariable Integer id) {
         MessageResponse<List<Comment>> messageResponse = new MessageResponse<>();
         Post post = postLogic.findOne(id);
         List<Comment> comments = commentLogic.getByColunmName("post", post);

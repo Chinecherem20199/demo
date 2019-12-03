@@ -6,6 +6,9 @@ import com.example.demo.handler.AjaxAuthenticationSuccessHandler;
 import com.example.demo.jwt.JwtService;
 import com.example.demo.model.User;
 import com.example.demo.support.DateGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import io.jsonwebtoken.Claims;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +27,7 @@ public class UserService {
 
     private UserLogic userLogic;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     @Autowired
     public UserService(JwtService jwtService, DateGenerator dateGenerator, UserLogic userLogic, BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -57,21 +61,31 @@ public class UserService {
 
     public User createUserToken(String username, String secret) {
 
-        String token = jwtService.createToken(username, dateGenerator.getExpirationDate());
+
         User u = userLogic.getByColunmName("userName", username).get(0);
+        String token = jwtService.createToken(u, dateGenerator.getExpirationDate());
         u.setToken(token);
         logger.info("=================Token===========" + token);
 
 //        userLogic.update(u);
         return u;
     }
+    private final Logger logger1 = Logger.getLogger(JwtService.class);
 
     public User validateUser(String token) {
         String username = jwtService.getUsername(token);
         if (username != null) {
             User user = userLogic.getByColunmName("userName", username).get(0);
             if (user != null && jwtService.isValid(token)) {
-                return user;
+               Claims claims=jwtService.getAllClaimsFromToken(token);
+                 Object userClaims = claims.get("user");
+                 logger.info(new Gson().toJson(userClaims));
+                Gson gson = new Gson();
+                User userObject = gson.fromJson(userClaims.toString(), User.class);
+                 if(userObject.getUsername().equals(username)){
+                     logger.info(new Gson().toJson(claims));
+                     return user;
+                 }
             }
         }
         return null;

@@ -111,6 +111,7 @@ public class UserController {
         logger.info(gson.toJson(user));
         User userObj = new User();
         userObj.setUsername(user.getUsername().trim());
+//        userObj.setPassword(user.getPassword().trim());
         userObj.setPassword(bCryptPasswordEncoder.encode(user.getPassword().trim()));
         Person person = new Person();
         person.setPhoneNumber(user.getPhoneNumber());

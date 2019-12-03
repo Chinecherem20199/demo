@@ -72,7 +72,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/savecomment").permitAll()
 
                 .antMatchers("/api/post", "/api/posts", "/api/post/**","/api/deactivatepost/**", "/api/deactivatedposts").hasAnyAuthority("ADMIN")
-                .antMatchers("/api/comment","/api/comment/**","/api/comments","/api/deactivatecomment/**","/api/commentsbypost","/api/deactivatedcomments",
+                .antMatchers("/api/comment","/api/comment/**","/api/comments","/api/deactivatecomment/**","/api/commentsbypost/**","/api/deactivatedcomments",
                         "/api/activatedcomments").hasAnyAuthority("ADMIN","USER")
                 .and()
                 .formLogin()

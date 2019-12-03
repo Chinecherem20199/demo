@@ -80,7 +80,7 @@ public class PostController {
         }
 
     @RequestMapping(value = "post/{id}", method = RequestMethod.GET)
-    public ResponseEntity<MessageResponse<Post>> GetPostsById(@RequestParam Integer id) {
+    public ResponseEntity<MessageResponse<Post>> GetPostsById(@PathVariable Integer id) {
         MessageResponse<Post> messageResponse = new MessageResponse<>();
         Gson gson = new Gson();
         logger.info(gson.toJson(messageResponse));

@@ -1,8 +1,11 @@
 package com.example.demo.jwt;
 
 
+import com.example.demo.model.User;
+import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
+import java.util.function.Function;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.codec.binary.Base64;
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JwtService {
@@ -20,11 +25,15 @@ public class JwtService {
     static final String secret ="SomeSecretForJWTGeneration";
     public static final long EXPIRATION_TIME = 5 * 60 * 60;
 
-    public String createToken(String username, Date expireAt) {
-       if(StringUtils.hasText(username) && StringUtils.hasText(secret) && expireAt != null && expireAt.after(new Date()) ) {
+    public String createToken(User user, Date expireAt) {
+        Map<String, Object> claims = new HashMap<>();
+       if(StringUtils.hasText(user.getUsername()) && StringUtils.hasText(secret) && expireAt != null && expireAt.after(new Date()) ) {
            String secret2 = new String(Base64.encodeBase64(secret.getBytes()));
+           String userMap= new Gson().toJson(user);
+           claims.put("user",userMap);
            String compactJws = Jwts.builder()
-                    .setSubject(username)
+                   .setClaims(claims)
+                    .setSubject(user.getUsername())
                    .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                     .signWith(SignatureAlgorithm.HS512, secret2)
                     .setExpiration(expireAt)
@@ -34,11 +43,23 @@ public class JwtService {
        return null;
     }
 
+    /** Started from here
+    * **/
+
+
+    public Claims getAllClaimsFromToken(String token) {
+        String secret2 = new String(Base64.encodeBase64(secret.getBytes()));
+        return Jwts.parser().setSigningKey(secret2).parseClaimsJws(token).getBody();
+
+    }
+    /** End of the code
+     * **/
+
     public boolean isValid(String token) {
         if(StringUtils.hasText(token) && StringUtils.hasText(secret)) {
             try {
                 String secret2 = new String(Base64.encodeBase64(secret.getBytes()));
-                Jwts.parser().setSigningKey(secret2).parseClaimsJws(token);
+               Claims claims= Jwts.parser().setSigningKey(secret2).parseClaimsJws(token).getBody();
                 return true;
             } catch (JwtException e) {
                 LOGGER.error(e.getMessage());
@@ -58,12 +79,4 @@ public class JwtService {
         }
         return null;
     }
-    //for retrieveing any information from token we will need the secret key
-
-    private Claims getAllClaimsFromToken(String token) {
-
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-
-    }
-
 }
