@@ -5,7 +5,6 @@ import com.example.demo.model.User;
 import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
-import java.util.function.Function;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.codec.binary.Base64;
@@ -78,5 +77,19 @@ public class JwtService {
             }
         }
         return null;
+
     }
+    // Modified code
+//    public String getUserId(String token) {
+//        if(StringUtils.hasText(token) && StringUtils.hasText(secret)) {
+//            try {
+//                String secret2 = new String(Base64.encodeBase64(secret.getBytes()));
+//                return Jwts.parser().setSigningKey(secret2).parseClaimsJws(token).getBody().getSubject();
+//            }  catch (JwtException e) {
+//                LOGGER.error(e.getMessage());
+//            }
+//        }
+//        return null;
+//
+//    }
 }

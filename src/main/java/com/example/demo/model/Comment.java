@@ -17,7 +17,8 @@ public class Comment implements Serializable {
     @ManyToOne(targetEntity = Post.class)
     private Post post;
    String status;
-    private User role;
+  @ManyToOne(targetEntity = User.class)
+    private User user;
 
     public Comment() {
     }
@@ -26,7 +27,7 @@ public class Comment implements Serializable {
         this.text = text;
 
         this.post = post;
-        this.role = role;
+        this.user = role;
     }
 
     public Integer getId() {
@@ -54,12 +55,12 @@ public class Comment implements Serializable {
         this.post = post;
     }
 
-    public User getRole() {
-        return role;
+    public User getUser() {
+        return user;
     }
 
-    public void setRole(User role) {
-        this.role = role;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getStatus() {

@@ -5,6 +5,7 @@ import com.example.demo.business_logic.PostLogic;
 import com.example.demo.business_logic.UserLogic;
 import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
+import com.example.demo.model.User;
 import com.example.demo.viewmodel.CommentViewModel;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
@@ -48,14 +49,25 @@ public class CommentController {
         Comment commentobj = new Comment();
         commentobj.setText(comment.getText());
         Post post = postLogic.findOne(comment.getPost());
-        commentobj.setPost(post);
-        commentobj.setStatus("ACTIVATED");
-        commentLogic.create(commentobj);
-        messageResponse.setStatus(HttpStatus.OK.value());
-        messageResponse.setMessage("A user just added comment.");
-        messageResponse.setSuccessful(true);
-        messageResponse.setData(commentobj);
-        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+        userLogic.getByColunmName("userName", "username");
+//        User user = userLogic.findOne(comment.getUser());
+        if (post!=null) {
+            commentobj.setPost(post);
+//            commentobj.setUser(user);
+            commentobj.setStatus("ACTIVATED");
+            commentLogic.create(commentobj);
+            messageResponse.setStatus(HttpStatus.OK.value());
+            messageResponse.setMessage("A user just added comment.");
+            messageResponse.setSuccessful(true);
+            messageResponse.setData(commentobj);
+            return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+        }else {
+            messageResponse.setStatus(HttpStatus.FORBIDDEN.value());
+            messageResponse.setMessage("Post id does not exist");
+            messageResponse.setSuccessful(false);
+            messageResponse.setData(commentobj);
+            return new ResponseEntity<>(messageResponse, HttpStatus.FORBIDDEN);
+        }
     }
     @RequestMapping(value = "/comment/{id}", method = RequestMethod.PUT)
     public ResponseEntity<MessageResponse<Comment>> UpdateComment(@PathVariable Integer id, @Valid @RequestBody CommentViewModel comment) {

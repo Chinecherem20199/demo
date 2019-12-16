@@ -23,6 +23,7 @@ import java.io.IOException;
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     private static final String AUTHORIZATION = "Authorization";
+    private static final String HEADER = "userId";
     private static final String UTF_8 = "UTF-8";
     //Begin index for bear. bc index of bearer is 7
    // private static final int BEGIN_INDEX = 7;
@@ -50,16 +51,21 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String authToken = request.getHeader(AUTHORIZATION);
-        if (authToken != null) {
+        String userTokenId = request.getHeader(HEADER);
+        if (authToken != null && userTokenId !=null) {
             try {
                 authToken = new String(authToken.getBytes());
+                userTokenId = new String(userTokenId.getBytes());
                 SecurityContext context = securityAppContext.getContext();
                 if (context.getAuthentication() == null) {
                     logger.info("Checking authentication for token " + authToken);
-                    User u = userService.validateUser(authToken);
+//                    logger.info("Checking user id for the token" + userTokenId);
+                    User u = userService.validateUser(authToken,userTokenId);
+//                    userService.validateUser(userTokenId);
 
                     if (u != null) {
                         logger.info("===========User " + u.getUsername() + " found.=========");
+                        logger.info("======UserId" + u.getId()+ "=====found");
                         Authentication authentication = usernamePasswordAuthenticationTokenFactory.create(u);
                         context.setAuthentication(authentication);
                     }

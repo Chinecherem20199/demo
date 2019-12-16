@@ -25,8 +25,6 @@ public class UserLogic extends AbstractJpaDao<User> {
             CriteriaQuery<User> cr = cb.createQuery(User.class);
             Root<User> root = cr.from(User.class);
             Predicate restriction = cb.equal(root.get(columName), value);
-//            Predicate restriction1 = cb.equal(root.get(columName), value);
-//            cr.select(root).where(restriction, restriction1).orderBy(cb.asc(root.get("id")));
             cr.select(root).where(restriction).orderBy(cb.asc(root.get("id")));
             Query<User> query = getCurrentSession().createQuery(cr);
             userList = query.getResultList();

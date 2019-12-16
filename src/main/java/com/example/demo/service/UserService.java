@@ -6,7 +6,6 @@ import com.example.demo.handler.AjaxAuthenticationSuccessHandler;
 import com.example.demo.jwt.JwtService;
 import com.example.demo.model.User;
 import com.example.demo.support.DateGenerator;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
 import org.apache.log4j.Logger;
@@ -72,9 +71,9 @@ public class UserService {
     }
     private final Logger logger1 = Logger.getLogger(JwtService.class);
 
-    public User validateUser(String token) {
+    public User validateUser(String token, String userId) {
         String username = jwtService.getUsername(token);
-        if (username != null) {
+        if (username != null && userId !=null) {
             User user = userLogic.getByColunmName("userName", username).get(0);
             if (user != null && jwtService.isValid(token)) {
                Claims claims=jwtService.getAllClaimsFromToken(token);
@@ -82,7 +81,7 @@ public class UserService {
                  logger.info(new Gson().toJson(userClaims));
                 Gson gson = new Gson();
                 User userObject = gson.fromJson(userClaims.toString(), User.class);
-                 if(userObject.getUsername().equals(username)){
+                 if(userObject.getId().toString().equals(userId)){
                      logger.info(new Gson().toJson(claims));
                      return user;
                  }
